@@ -95,25 +95,25 @@ public class LoadGenerationTemplate {
 
 
         if (createSelects) {
-            for (int in = 0; in <= s; in++) {
+            for (int in = 0; in < s; in++) {
                 createSelect();
             }
         }
 
         if (createInserts) {
-            for (int in = 0; in <= i; in++) {
+            for (int in = 0; in < i; in++) {
                 createInsert();
             }
         }
 
         if (createUpdates) {
-            for (int in = 0; in <= u; in++) {
+            for (int in = 0; in < u; in++) {
                 createUpdate();
             }
         }
 
         if (createDeletes) {
-            for (int in = 0; in <= d; in++) {
+            for (int in = 0; in < d; in++) {
                 createDelete();
             }
         }
