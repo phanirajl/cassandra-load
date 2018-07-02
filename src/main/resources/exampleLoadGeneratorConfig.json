@@ -1,0 +1,22 @@
+{
+  "tableName" : "testTable",
+  "columns" : [
+    {"id":"uuid"},
+    {"name":"text"},
+    {"prename":"text"},
+    {"createdAt":"timestamp"},
+    {"salary":"decimal"},
+    {"lebenslauf":"blob"}
+  ],
+  "partitionKeys" : [
+    {"name":"text"}
+  ],
+  "secondaryIndizes" : [
+    {"id":"uuid"}
+  ],
+  "indizes" : [],
+  "selects" : 2000,
+  "inserts" : 1000,
+  "updates" : 200,
+  "deletes" : 100
+}
