@@ -1,0 +1,9 @@
+testTable
+id:uuid,name:text,prename:text,createdAt:timestamp,salary:decimal,lebenslauf:blob
+name:text
+id:uuid
+
+2000
+1000
+200
+100

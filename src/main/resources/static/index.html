@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cassandra Performance Tool</title>
+    <meta charset="utf-8">
+</head>
+<body>
+    <h1>Cassandra Performance testing tool</h1>
+    <h2>Description</h2>
+    <p>First define the config below and generate the load. Then execute the test with the generated Load. You can append your own queries to the generated load. But take care for the formalitites!</p>
+    <form>
+        <input type="text" id="tableName" placeholder="Tablename" /><br/>
+        <input type="text" id="columns" placeholder="columns like NAME:TYPE separated by ','"/><br/>
+        <input type="text" id="partitionKeys" placeholder="partition keys like NAME:TYPE separated by ','"/><br/>
+        <input type="text" id="secondaryIndizes" placeholder="secondary indizes like NAME:TYPE separated by ','"/><br/>
+        <input type="text" id="indizes" placeholder="indizes like NAME:TYPE separated by ','"/><br/>
+        <input type="text" id="selects" placeholder="Number of selects to be generated"/><br/>
+        <input type="text" id="inserts" placeholder="Number of inserts to be generated"/><br/>
+        <input type="text" id="updates" placeholder="Number of updates to be generated"/><br/>
+        <input type="text" id="deletes" placeholder="Number of deletes to be generated"/><br/>
+        <button type="button" onclick="generateLoad()">generate Load</button>
+    </form>
+
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+
+    <form>
+        <textarea id="queries"
+                  placeholder="paste in loaddata here"
+                  style="width: 100%;height: 20%">
+        </textarea><br/>
+        <input type="text" id="host" placeholder="contact-point">
+        <input type="text" id="ks" placeholder="keyspace">
+        <button type="button" onclick="test()">start test</button>
+    </form>
+
+    <h1 id="result"></h1>
+    <script type="application/javascript">
+
+        var SPLITTER = ",";
+        var INTERN_SPLITTER = ":";
+        var HOST = "http://localhost:8080";
+
+        function generateLoad() {
+
+            console.log("clicked")
+
+            var tableName = document.getElementById("tableName").value;
+            var columns = document.getElementById("columns").value;
+            var partitionKeys = document.getElementById("partitionKeys").value;
+            var secondaryIndizes = document.getElementById("secondaryIndizes").value;
+            var indizes = document.getElementById("indizes").value;
+            var selects = document.getElementById("selects").value;
+            var inserts = document.getElementById("inserts").value;
+            var updates = document.getElementById("updates").value;
+            var deletes = document.getElementById("deletes").value;
+
+            var columnMap = split(columns);
+            var partitonKeysMap = split(partitionKeys);
+            var secondaryIndizesMap = split(secondaryIndizes);
+            var indizesMap = split(indizes);
+
+            console.log("Formdata: " + tableName + " " + columns + " " + partitionKeys + " " + secondaryIndizes + " " + indizes + " " + selects + " " + inserts + " " + updates + " " + deletes);
+
+            getLoad(tableName, columnMap, partitonKeysMap, secondaryIndizesMap, indizesMap, selects, inserts, updates, deletes);
+        }
+
+        function test() {
+
+            var json = document.getElementById("queries").value;
+            var host = document.getElementById("host").value;
+            var ks = document.getElementById("ks").value;
+
+            var url = HOST + "/starttest/" + host + "/" + ks;
+            var req = new XMLHttpRequest();
+            req.open('POST', url, true);
+            req.setRequestHeader("Accept","application/json");
+            req.setRequestHeader("Content-Type","application/json");
+            req.onreadystatechange = function (ev) {
+                if (this.readyState == XMLHttpRequest.DONE && this.status == 200) {
+                    document.getElementById("result").innerText = this.responseText;
+                }
+                if (this.readyState == XMLHttpRequest.DONE && this.status != 200) {
+                    document.getElementById("result").innerText = "ERROR: " + this.responseText;
+                }
+                if (this.readyState == XMLHttpRequest.LOADING) {
+                    document.getElementById("result").innerText = "Loading...";
+                }
+            };
+            req.send(json);
+        }
+
+        function getLoad(tableName, columnMap, partitonKeysMap, secondaryIndizesMap, indizesMap, selects, inserts, updates, deletes) {
+            var req = new XMLHttpRequest();
+            req.open('POST', HOST + '/getload', true);
+            req.setRequestHeader("Accept","application/json");
+            req.setRequestHeader("Content-Type","application/json");
+            req.onreadystatechange = function (ev) {
+                if (this.readyState == XMLHttpRequest.DONE && this.status == 200) {
+                    document.getElementById("queries").innerText = this.responseText;
+                    document.getElementById("result").innerText = "";
+                }
+                if (this.readyState == XMLHttpRequest.DONE && this.status != 200) {
+                    document.getElementById("result").innerText = "ERROR: " + this.responseText;
+                }
+                if (this.readyState == XMLHttpRequest.LOADING) {
+                    document.getElementById("result").innerText = "Loading...";
+                }
+            };
+            req.send(jsonifyLoadConfig(tableName, columnMap, partitonKeysMap, secondaryIndizesMap, indizesMap, selects, inserts, updates, deletes));
+        }
+
+        function jsonifyLoadConfig(tableName, columnMap, partitonKeysMap, secondaryIndizesMap, indizesMap, selects, inserts, updates, deletes) {
+            var json = "{";
+            json += "\"tableName\":\""+tableName+"\",";
+            json += "\"columns\":[";
+            console.log("COLUMN-MAP: " + columnMap);
+            for (let [key, value] of columnMap) {
+                json += "{\"" + key + "\":\"" + value + "\"},"
+            }
+            json = json.substring(0,json.length-1);
+            json += "],";
+            json += "\"partitionKeys\":[";
+            for (let [key, value] of partitonKeysMap) {
+                json += "{\"" + key + "\":\"" + value + "\"},"
+            }
+            json = json.substring(0,json.length-1);
+            json += "],";
+            json += "\"secondaryIndizes\":[";
+            for (let [key, value] of secondaryIndizesMap) {
+                json += "{\"" + key + "\":\"" + value + "\"},"
+            }
+            json = json.substring(0,json.length-1);
+            json += "],";
+            json += "\"indizes\":[";
+            for (let [key, value] of indizesMap) {
+                json += "{\"" + key + "\":\"" + value + "\"},"
+            }
+            json = json.substring(0,json.length-1);
+            json += "],";
+            json += "\"selects\":\""+selects+"\",";
+            json += "\"inserts\":\""+inserts+"\",";
+            json += "\"updates\":\""+updates+"\",";
+            json += "\"deletes\":\""+deletes+"\"}";
+            console.log("generated JSON : " + json);
+            return json;
+        }
+
+        function split(columns) {
+            var map = new Map();
+
+            columns = columns.trim();
+            var columnsSplitted = columns.split(SPLITTER);
+            for (var col in columnsSplitted) {
+                console.log("SPLITTET: " + columnsSplitted[col]);
+            }
+
+            for (var col in columnsSplitted) {
+                var internSplit = columnsSplitted[col].split(INTERN_SPLITTER);
+                console.log("INTERN SPLITTET: " + internSplit[0] + " / " + internSplit[1]);
+                map.set(internSplit[0], internSplit[1]);
+            }
+
+            return map;
+        }
+
+    </script>
+</body>
+</html>

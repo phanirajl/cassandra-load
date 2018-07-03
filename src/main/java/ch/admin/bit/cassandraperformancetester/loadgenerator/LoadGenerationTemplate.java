@@ -178,38 +178,31 @@ public class LoadGenerationTemplate {
 
     private void createUpdate() {
 
-        Random r = new Random();
-        int randomCol = r.nextInt(columnNamesAndTypes.size()-1);
-        String col = "";
-        int counter = 0;
-        Iterator<String> cols = columnNamesAndTypes.keySet().iterator();
-        while (counter <= randomCol) {
-            col = cols.next();
-            counter++;
+        String col = getRandomColumn();
+        if (partitionKeys.keySet().contains(col) || secondaryIndizes.keySet().contains(col)) {
+            createUpdate();
+            return;
         }
 
         String update = "UPDATE " + tableName + " SET ";
         if (columnNamesAndTypes.get(col).equals("text") || columnNamesAndTypes.get(col).equals("ascii")) {
-            update += col + " = '" + typeAndValue.get(columnNamesAndTypes.get(col)) + "';";
+            update += col + " = '" + typeAndValue.get(columnNamesAndTypes.get(col)) + "'";
         } else {
-            update += col + " = " + typeAndValue.get(columnNamesAndTypes.get(col)) + ";";
+            update += col + " = " + typeAndValue.get(columnNamesAndTypes.get(col));
         }
+        update += " WHERE name = '" + typeAndValue.get("text") + "' AND id = " + typeAndValue.get("uuid") + ";";
         updates.add(update);
     }
 
     private void createDelete() {
 
-        Random r = new Random();
-        int randomCol = r.nextInt(columnNamesAndTypes.size()-1);
-        String col = "";
-        int counter = 0;
-        Iterator<String> cols = columnNamesAndTypes.keySet().iterator();
-        while (counter <= randomCol) {
-            col = cols.next();
-            counter++;
+        String col = getRandomColumn();
+        if (partitionKeys.keySet().contains(col) || secondaryIndizes.keySet().contains(col)) {
+            createDelete();
+            return;
         }
 
-        String delete = "DELETE " + col + " FROM " + tableName + ";";
+        String delete = "DELETE " + col + " FROM " + tableName + " WHERE name = '" + typeAndValue.get("text") + "' AND id = " + typeAndValue.get("uuid") + ";";;
         deletes.add(delete);
     }
 
@@ -219,6 +212,22 @@ public class LoadGenerationTemplate {
             String key = col.keys().next();
             map.put(key, col.getString(key));
         });
+    }
+
+    private String getRandomColumn() {
+
+        Random r = new Random();
+        int size = (columnNamesAndTypes.size() > 0) ? columnNamesAndTypes.size()-1 : 1;
+        int randomCol = r.nextInt(size);
+        String col = "";
+        int counter = 0;
+        Iterator<String> cols = columnNamesAndTypes.keySet().iterator();
+        while (counter <= randomCol) {
+            col = cols.next();
+            counter++;
+        }
+
+        return col;
     }
 
     @Override

@@ -7,7 +7,8 @@ import java.util.List;
 public class LoadGenerator {
 
     //Default is current directory
-    private static final String DEFAULT_SAVEPATH = System.getProperty("user.dir") + "/load.json";
+    private static final String DEFAULT_SAVEPATH_STRING = System.getProperty("user.dir") + "/load.json";
+    public static final Path DEFAULT_SAVEPATH = Paths.get(DEFAULT_SAVEPATH_STRING);
 
     public static void main(String[] args) {
 
@@ -16,7 +17,7 @@ public class LoadGenerator {
             System.exit(1);
         }
 
-        Path savePath = Paths.get(DEFAULT_SAVEPATH);
+        Path savePath = DEFAULT_SAVEPATH;
         if (args.length == 2) {
             savePath = Paths.get(args[1]);
         }
