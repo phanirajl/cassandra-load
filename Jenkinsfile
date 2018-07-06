@@ -35,13 +35,11 @@ pipeline {
                         def jdk = docker.image('bit/openjdk:8-jdk')
                         jdk.pull()
                         jdk.inside() {
-                            sh './mvnw clean install -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn'
+                            sh './mvnw clean install'
                             stash 'build-workspace-documentservice'
                         }
                     }
                 }
-                junit(allowEmptyResults: true,
-                        testResults: '**/target/surefire-reports/TEST-*.xml')
             }
         }
 
@@ -56,7 +54,7 @@ pipeline {
                         cfApi.pull()
                         cfApi.inside('-u root') {
                             withCredentials([usernamePassword(credentialsId: 'stackatoCredentials', passwordVariable: 'STACKATO_PASSWORD', usernameVariable: 'STACKATO_USERNAME')]) {
-                                sh "cf login -a '${STACKATO_API_URL}' -u '${STACKATO_USERNAME}' -p '${STACKATO_PASSWORD}' -o 'DEV' -s 'EBD' --skip-ssl-validation"
+                                sh "cf login -a '${STACKATO_API_URL}' -u '${STACKATO_USERNAME}' -p '${STACKATO_PASSWORD}' -o 'TEST' -s 'EBD' --skip-ssl-validation"
                             }
                             unstash 'build-workspace-documentservice'
                             sh "cf zero-downtime-push cassandra-performancetester -f 'manifest.yml'"
