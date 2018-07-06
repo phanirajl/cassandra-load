@@ -35,7 +35,6 @@ pipeline {
                         def jdk = docker.image('bit/openjdk:8-jdk')
                         jdk.pull()
                         jdk.inside() {
-                            sh 'set MAVEN_OPTS=-Dhttp.proxyHost=proxy-bvcol.admin.ch -Dhttp.proxyPort=8080 -Dhttps.proxyHost=proxy-bvcol.admin.ch -Dhttps.proxyPort=8080'
                             sh './mvnw clean install'
                             stash 'build-workspace-cassandra-performancetester'
                         }
