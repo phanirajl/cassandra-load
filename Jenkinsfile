@@ -1,5 +1,4 @@
 #!/usr/bin/env groovy
-@Library('jeap-pipelinelibrary@feature/pipeline-with-pact') _
 
 pipeline {
 
