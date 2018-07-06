@@ -10,36 +10,36 @@ public class LoadDataGenerator {
     private static Random random = new Random();
 
     public static String valueAsString(String type) {
-       switch(type.toLowerCase()) {
-           case "text":
-               return getText();
-           case "ascii":
-               return getAscii();
-           case "int":
-               return getInt();
-           case "bigint":
-               return getBigint();
-           case "varint":
-               return getVarint();
-           case "float":
-               return getFloat();
-           case "double":
-               return getDouble();
-           case "decimal":
-               return getDecimal();
-           case "timestamp":
-               return getTimestamp();
-           case "uuid":
-               return getUuid();
-           case "timeuuid":
-               return getTimeuuid();
-           case "boolean":
-               return getBoolean();
-           case "blob":
-               return getBlob();
-           default:
-               return "UNDEFINED TYPE";
-       }
+        switch (type.toLowerCase()) {
+            case "text":
+                return getText();
+            case "ascii":
+                return getAscii();
+            case "int":
+                return getInt();
+            case "bigint":
+                return getBigint();
+            case "varint":
+                return getVarint();
+            case "float":
+                return getFloat();
+            case "double":
+                return getDouble();
+            case "decimal":
+                return getDecimal();
+            case "timestamp":
+                return getTimestamp();
+            case "uuid":
+                return getUuid();
+            case "timeuuid":
+                return getTimeuuid();
+            case "boolean":
+                return getBoolean();
+            case "blob":
+                return getBlob();
+            default:
+                return "UNDEFINED TYPE";
+        }
     }
 
     private static String getText() {
@@ -78,7 +78,7 @@ public class LoadDataGenerator {
         return LocalDateTime.now().format(DateTimeFormatter.BASIC_ISO_DATE);
     }
 
-    private static String getUuid () {
+    private static String getUuid() {
         return UUID.randomUUID().toString();
     }
 

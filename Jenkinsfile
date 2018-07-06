@@ -64,4 +64,13 @@ pipeline {
             }
         }
     }
+
+    post {
+        always {
+            retry(3) {
+                sh "docker run --rm -v \$(pwd):/workspace busybox chown -R \"\$(id -u):\$(id -g)\" /workspace"
+                deleteDir()
+            }
+        }
+    }
 }

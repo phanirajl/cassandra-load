@@ -79,13 +79,13 @@ public class LoadGenerationTemplate {
     private void generateDummyValues() {
         for (String col : columnNamesAndTypes.keySet()) {
             if (!typeAndValue.containsKey(columnNamesAndTypes.get(col))) {
-                typeAndValue.put(columnNamesAndTypes.get(col),LoadDataGenerator.valueAsString(columnNamesAndTypes.get(col)));
+                typeAndValue.put(columnNamesAndTypes.get(col), LoadDataGenerator.valueAsString(columnNamesAndTypes.get(col)));
             }
         }
     }
 
     public void generate() {
-        generate(true,true,true,true);
+        generate(true, true, true, true);
     }
 
     public void generate(boolean createSelects,
@@ -119,7 +119,7 @@ public class LoadGenerationTemplate {
         }
 
         try {
-            OutputStream out = Files.newOutputStream(savePath,StandardOpenOption.CREATE,StandardOpenOption.WRITE,StandardOpenOption.TRUNCATE_EXISTING);
+            OutputStream out = Files.newOutputStream(savePath, StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
             out.write("{\n\t\"queries\": [".getBytes());
             writeListToFile(out, inserts, false);
             writeListToFile(out, selects, false);
@@ -161,7 +161,7 @@ public class LoadGenerationTemplate {
             insert += col + ",";
         }
         //delete last comma
-        insert = insert.substring(0,insert.length()-1);
+        insert = insert.substring(0, insert.length() - 1);
         insert += ") VALUES (";
         for (String type : columnNamesAndTypes.values()) {
             if (type.equals("text") || type.equals("ascii")) {
@@ -171,7 +171,7 @@ public class LoadGenerationTemplate {
             }
         }
         //delete last comma
-        insert = insert.substring(0,insert.length()-1);
+        insert = insert.substring(0, insert.length() - 1);
         insert += ");";
         inserts.add(insert);
     }
@@ -206,7 +206,7 @@ public class LoadGenerationTemplate {
         deletes.add(delete);
     }
 
-    private void fillMapFromJsonArray(JSONArray jsonArray, Map<String,String> map) {
+    private void fillMapFromJsonArray(JSONArray jsonArray, Map<String, String> map) {
         jsonArray.iterator().forEachRemaining(o -> {
             JSONObject col = (JSONObject) o;
             String key = col.keys().next();
@@ -217,7 +217,7 @@ public class LoadGenerationTemplate {
     private String getRandomColumn() {
 
         Random r = new Random();
-        int size = (columnNamesAndTypes.size() > 0) ? columnNamesAndTypes.size()-1 : 1;
+        int size = (columnNamesAndTypes.size() > 0) ? columnNamesAndTypes.size() - 1 : 1;
         int randomCol = r.nextInt(size);
         String col = "";
         int counter = 0;
@@ -245,7 +245,7 @@ public class LoadGenerationTemplate {
             }
         }
 
-        pkas.substring(0,pkas.length()-4);
+        pkas.substring(0, pkas.length() - 4);
         System.out.println("ASSERTION STRING PK : " + pkas);
         return pkas;
     }
@@ -265,7 +265,7 @@ public class LoadGenerationTemplate {
             }
         }
 
-        sias.substring(0,sias.length()-4);
+        sias.substring(0, sias.length() - 4);
         System.out.println("ASSERTION STRING SI : " + sias);
         return sias;
     }
