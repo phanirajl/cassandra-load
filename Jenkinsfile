@@ -13,20 +13,20 @@ pipeline {
 
     stages {
 
-        stage('Prepare build environment') {
-            steps {
-                script {
-                    // Create settings.xml file for the Maven build pipeline
-                    withCredentials([[$class          : 'UsernamePasswordMultiBinding', credentialsId: 'nexusCredentials',
-                                      usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-                        def settingsXml = libraryResource('ch/admin/bit/maven/settings.xml')
-                                .replaceAll("@USERNAME@", "${USERNAME}")
-                                .replaceAll("@PASSWORD@", "${PASSWORD}")
-                        writeFile file: 'settings.xml', text: settingsXml
-                    }
-                }
-            }
-        }
+//        stage('Prepare build environment') {
+//            steps {
+//                script {
+//                    // Create settings.xml file for the Maven build pipeline
+//                    withCredentials([[$class          : 'UsernamePasswordMultiBinding', credentialsId: 'nexusCredentials',
+//                                      usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+//                        def settingsXml = libraryResource('ch/admin/bit/maven/settings.xml')
+//                                .replaceAll("@USERNAME@", "${USERNAME}")
+//                                .replaceAll("@PASSWORD@", "${PASSWORD}")
+//                        writeFile file: 'settings.xml', text: settingsXml
+//                    }
+//                }
+//            }
+//        }
 
         stage('Build & Unit Tests') {
             steps {
@@ -35,6 +35,7 @@ pipeline {
                         def jdk = docker.image('bit/openjdk:8-jdk')
                         jdk.pull()
                         jdk.inside() {
+                            sh 'set MAVEN_OPTS=-Dhttp.proxyHost=proxy-bvcol.admin.ch -Dhttp.proxyPort=8080 -Dhttps.proxyHost=proxy-bvcol.admin.ch -Dhttps.proxyPort=8080'
                             sh './mvnw clean install'
                             stash 'build-workspace-cassandra-performancetester'
                         }
