@@ -34,7 +34,7 @@
 #   MAVEN_SKIP_RC - flag to disable loading of mavenrc files
 # ----------------------------------------------------------------------------
 
-export MAVEN_CONFIG='-Dhttp.proxyHost=proxy.admin.ch -Dhttp.proxyPort=8080 -Dhttps.proxyHost=proxy.admin.ch -Dhttps.proxyPort=8080 -Dhttp.nonProxyHosts=localhost|127.0.0.1|*.bit.admin.ch -Dhttps.nonProxyHosts=localhost|127.0.0.1|*.bit.admin.ch'
+export MAVEN_CONFIG='-Dhttp.proxyHost=proxy.admin.ch -Dhttp.proxyPort=8080 -Dhttps.proxyHost=proxy.admin.ch -Dhttps.proxyPort=8080 -Dhttp.nonProxyHosts=localhost|127.0.0.1|*.bit.admin.ch -Dhttps.nonProxyHosts=localhost|127.0.0.1|*.bit.admin.ch -Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true -Dmaven.wagon.http.ssl.ignore.validity.dates=true'
 
 echo '--------------------------------------'
 echo $MAVEN_CONFIG
