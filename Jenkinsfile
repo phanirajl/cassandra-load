@@ -36,7 +36,7 @@ pipeline {
                         jdk.pull()
                         jdk.inside() {
                             sh './mvnw clean install'
-                            stash 'build-workspace-documentservice'
+                            stash 'build-workspace-cassandra-performancetester'
                         }
                     }
                 }
@@ -56,7 +56,7 @@ pipeline {
                             withCredentials([usernamePassword(credentialsId: 'stackatoCredentials', passwordVariable: 'STACKATO_PASSWORD', usernameVariable: 'STACKATO_USERNAME')]) {
                                 sh "cf login -a '${STACKATO_API_URL}' -u '${STACKATO_USERNAME}' -p '${STACKATO_PASSWORD}' -o 'TEST' -s 'EBD' --skip-ssl-validation"
                             }
-                            unstash 'build-workspace-documentservice'
+                            unstash 'build-workspace-cassandra-performancetester'
                             sh "cf zero-downtime-push cassandra-performancetester -f 'manifest.yml'"
                         }
                     }
