@@ -33,6 +33,9 @@
 #       set MAVEN_OPTS=-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000
 #   MAVEN_SKIP_RC - flag to disable loading of mavenrc files
 # ----------------------------------------------------------------------------
+
+export MAVEN_CONFIG='-Dhttp.proxyHost=proxy.admin.ch -Dhttp.proxyPort=8080 -Dhttps.proxyHost=proxy.admin.ch -Dhttps.proxyPort=8080 -Dhttp.nonProxyHosts=localhost|127.0.0.1|*.bit.admin.ch -Dhttps.nonProxyHosts=localhost|127.0.0.1|*.bit.admin.ch'
+
 echo '--------------------------------------'
 echo $MAVEN_CONFIG
 echo '--------------------------------------'
