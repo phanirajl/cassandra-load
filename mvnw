@@ -34,11 +34,6 @@
 #   MAVEN_SKIP_RC - flag to disable loading of mavenrc files
 # ----------------------------------------------------------------------------
 
-export MAVEN_CONFIG='-Dhttp.proxyHost=proxy.admin.ch -Dhttp.proxyPort=8080 -Dhttps.proxyHost=proxy.admin.ch -Dhttps.proxyPort=8080 -Dhttp.nonProxyHosts=localhost|127.0.0.1|*.bit.admin.ch -Dhttps.nonProxyHosts=localhost|127.0.0.1|*.bit.admin.ch -Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true -Dmaven.wagon.http.ssl.ignore.validity.dates=true'
-
-echo '--------------------------------------'
-echo $MAVEN_CONFIG
-echo '--------------------------------------'
 if [ -z "$MAVEN_SKIP_RC" ] ; then
 
   if [ -f /etc/mavenrc ] ; then
@@ -227,4 +222,5 @@ exec "$JAVACMD" \
   $MAVEN_OPTS \
   -classpath "$MAVEN_PROJECTBASEDIR/.mvn/wrapper/maven-wrapper.jar" \
   "-Dmaven.home=${M2_HOME}" "-Dmaven.multiModuleProjectDirectory=${MAVEN_PROJECTBASEDIR}" \
+  "-Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true -Dmaven.wagon.http.ssl.ignore.validity.dates=true" \
   ${WRAPPER_LAUNCHER} $MAVEN_CONFIG "$@"
