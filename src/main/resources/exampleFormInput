@@ -1,3 +1,4 @@
+-- EXAMPLE --
 testTable
 id:uuid,name:text,prename:text,createdAt:timestamp,salary:decimal,lebenslauf:blob
 name:text
@@ -7,3 +8,16 @@ id:uuid
 1000
 200
 100
+-- --
+
+-- EBD --
+ebd_document_service
+document
+document_id:uuid,automaticdeletionblocked:boolean,creationdatetime:timestamp,customsdeclarationnumber:text,documenttype:text,extensiontype:text,filename:text,lastupdatedatetime:timestamp,status:text,traderdeclarationnumber:text,uidnumber:text
+document_id:uuid
+
+
+10000
+10000
+200
+200

@@ -190,7 +190,7 @@ public class LoadGenerationTemplate {
         } else {
             update += col + " = " + typeAndValue.get(columnNamesAndTypes.get(col));
         }
-        update += " WHERE name = '" + typeAndValue.get("text") + "' AND id = " + typeAndValue.get("uuid") + ";";
+        update += " WHERE " + getPartitionKeyAssertionString() + " AND " + getSecondaryIndizesAssertionString() + ";";
         updates.add(update);
     }
 
@@ -202,7 +202,7 @@ public class LoadGenerationTemplate {
             return;
         }
 
-        String delete = "DELETE " + col + " FROM " + tableName + " WHERE name = '" + typeAndValue.get("text") + "' AND id = " + typeAndValue.get("uuid") + ";";;
+        String delete = "DELETE " + col + " FROM " + tableName + " WHERE " + getPartitionKeyAssertionString() + " AND " + getSecondaryIndizesAssertionString() + ";";
         deletes.add(delete);
     }
 
@@ -228,6 +228,46 @@ public class LoadGenerationTemplate {
         }
 
         return col;
+    }
+
+    private String getPartitionKeyAssertionString() {
+        String pkas = "";
+
+        if (partitionKeys.isEmpty()) {
+            return "";
+        }
+
+        for (String pk : partitionKeys.keySet()) {
+            if (columnNamesAndTypes.get(pk).equals("text") || columnNamesAndTypes.get(pk).equals("ascii")) {
+                pkas += pk + " = '" + typeAndValue.get(partitionKeys.get(pk)) + "' AND";
+            } else {
+                pkas += pk + " = " + typeAndValue.get(partitionKeys.get(pk)) + " AND";
+            }
+        }
+
+        pkas.substring(0,pkas.length()-4);
+        System.out.println("ASSERTION STRING PK : " + pkas);
+        return pkas;
+    }
+
+    private String getSecondaryIndizesAssertionString() {
+        String sias = "";
+
+        if (secondaryIndizes.isEmpty()) {
+            return "";
+        }
+
+        for (String si : secondaryIndizes.keySet()) {
+            if (columnNamesAndTypes.get(si).equals("text") || columnNamesAndTypes.get(si).equals("ascii")) {
+                sias += si + " = '" + typeAndValue.get(secondaryIndizes.get(si)) + "' AND";
+            } else {
+                sias += si + " = " + typeAndValue.get(secondaryIndizes.get(si)) + " AND";
+            }
+        }
+
+        sias.substring(0,sias.length()-4);
+        System.out.println("ASSERTION STRING SI : " + sias);
+        return sias;
     }
 
     @Override

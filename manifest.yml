@@ -1,0 +1,12 @@
+---
+path: cassandra-performancetester/target/cassandra-performancetester-0.0.1-SNAPSHOT.jar
+instances: 1
+buildpack: https://github.com/cloudfoundry/java-buildpack.git
+
+applications:
+- name: cassandra-performancetester
+  routes:
+  - route: cassandra-performance.test.app.stsszfe01.sszadmbit.sszad.admin.ch
+
+env:
+  JAVA_OPTS: -Duser.timezone=Europe/Zurich -Dfile.encoding=UTF-8
