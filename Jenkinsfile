@@ -1,4 +1,5 @@
 #!/usr/bin/env groovy
+//@Library('jeap-pipelinelibrary@feature/pipeline-with-pact') _
 
 pipeline {
 
@@ -11,20 +12,20 @@ pipeline {
 
     stages {
 
-        stage('Prepare build environment') {
-            steps {
-                script {
-                    // Create settings.xml file for the Maven build pipeline
-                    withCredentials([[$class          : 'UsernamePasswordMultiBinding', credentialsId: 'nexusCredentials',
-                                      usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-                        def settingsXml = libraryResource('ch/admin/bit/maven/settings.xml')
-                                .replaceAll("@USERNAME@", "${USERNAME}")
-                                .replaceAll("@PASSWORD@", "${PASSWORD}")
-                        writeFile file: 'settings.xml', text: settingsXml
-                    }
-                }
-            }
-        }
+//        stage('Prepare build environment') {
+//            steps {
+//                script {
+//                    // Create settings.xml file for the Maven build pipeline
+//                    withCredentials([[$class          : 'UsernamePasswordMultiBinding', credentialsId: 'nexusCredentials',
+//                                      usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+//                        def settingsXml = libraryResource('ch/admin/bit/maven/settings.xml')
+//                                .replaceAll("@USERNAME@", "${USERNAME}")
+//                                .replaceAll("@PASSWORD@", "${PASSWORD}")
+//                        writeFile file: 'settings.xml', text: settingsXml
+//                    }
+//                }
+//            }
+//        }
 
         stage('Build & Unit Tests') {
             steps {
